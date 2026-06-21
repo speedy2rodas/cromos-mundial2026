@@ -116,12 +116,11 @@ function renderList(data) {
   const content = document.getElementById('content');
   content.innerHTML = '';
 
-  document.getElementById('header-sub').textContent = data.ownerName
-    ? `Lista de ${data.ownerName}` : 'Lista partilhada';
+  document.getElementById('header-sub').textContent = 'Lista partilhada';
 
   const note = document.createElement('div');
   note.className = 'owner-note';
-  note.innerHTML = `🔁 <b>Tem para troca</b> — cromos que ${data.ownerName||'esta pessoa'} pode dar.<br>📭 <b>Precisa destes</b> — cromos que ${data.ownerName||'esta pessoa'} ainda não tem.<br><br>Marca os que te interessam e mostra o ecrã.`;
+  note.innerHTML = `🔁 <b>Tem para troca</b> — cromos repetidos disponíveis.<br>📭 <b>Precisa destes</b> — cromos que ainda faltam.<br><br>Marca os que te interessam e mostra o ecrã.`;
   content.appendChild(note);
 
   if (data.repetidos && data.repetidos.length) {
