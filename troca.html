@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#004d30">
+<title>Lista de Troca — Mundial 2026</title>
+<style>
+  :root {
+    --verde: #006641; --verde-escuro: #004d30;
+    --ouro: #C8963C; --ouro-claro: #e8b55a;
+    --bg: #0a0f0d; --bg-card: #111a14; --bg-card2: #162019;
+    --texto: #e8f0ea; --texto2: #9ab09d; --borda: #1e3024;
+    --laranja: #e07b20;
+    --radius: 12px;
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-bot: env(safe-area-inset-bottom, 0px);
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body {
+    margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg); color: var(--texto); min-height: 100vh;
+    padding-top: var(--safe-top); padding-bottom: var(--safe-bot);
+  }
+  .header {
+    background: linear-gradient(135deg, var(--verde), var(--verde-escuro));
+    padding: 18px 16px; border-bottom: 2px solid var(--ouro);
+    text-align: center;
+  }
+  .header h1 { margin: 0; font-size: 17px; font-weight: 800; color: var(--ouro-claro); letter-spacing: 0.5px; }
+  .header p { margin: 4px 0 0; font-size: 12px; color: var(--texto2); }
+
+  .content { padding: 14px; max-width: 480px; margin: 0 auto; }
+
+  .state-msg { text-align: center; padding: 60px 20px; color: var(--texto2); font-size: 14px; }
+  .state-msg .ico { font-size: 36px; margin-bottom: 12px; }
+
+  .section { background: var(--bg-card); border: 1px solid var(--borda); border-radius: var(--radius); margin-bottom: 14px; overflow: hidden; }
+  .section-header { padding: 12px 14px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--borda); }
+  .section-header .ico { font-size: 16px; }
+  .section-header .title { font-weight: 800; font-size: 13px; flex: 1; }
+  .section-header .count { font-size: 11px; color: var(--texto2); background: var(--bg-card2); padding: 2px 8px; border-radius: 99px; }
+
+  .item-row { display: flex; align-items: center; padding: 10px 14px; border-bottom: 1px solid var(--borda); gap: 10px; cursor: pointer; transition: background 0.15s; }
+  .item-row:last-child { border-bottom: none; }
+  .item-row:active { background: var(--bg-card2); }
+  .item-row.checked { background: rgba(200,150,60,0.1); }
+  .item-check {
+    width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--borda); flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800;
+    transition: all 0.15s;
+  }
+  .item-row.checked .item-check { background: var(--ouro); border-color: var(--ouro); color: #000; }
+  .item-code { font-weight: 800; color: var(--ouro-claro); font-family: monospace; font-size: 14px; width: 50px; flex-shrink: 0; }
+  .item-name { flex: 1; font-size: 12px; color: var(--texto2); min-width: 0; }
+  .item-qty { background: var(--laranja); color: #fff; font-size: 10px; font-weight: 800; padding: 2px 7px; border-radius: 99px; flex-shrink: 0; }
+
+  .summary-bar {
+    position: sticky; bottom: 0; background: var(--bg-card); border-top: 1px solid var(--borda);
+    padding: 12px 14px calc(12px + var(--safe-bot)); display: flex; align-items: center; justify-content: space-between;
+    gap: 10px; box-shadow: 0 -4px 16px rgba(0,0,0,0.3);
+  }
+  .summary-bar .txt { font-size: 12px; color: var(--texto2); }
+  .summary-bar .txt b { color: var(--ouro-claro); }
+  .summary-btn {
+    background: var(--verde); color: #fff; border: none; border-radius: 10px;
+    padding: 10px 18px; font-size: 13px; font-weight: 700; cursor: pointer;
+  }
+
+  .owner-note {
+    background: var(--bg-card2); border: 1px solid var(--borda); border-radius: var(--radius);
+    padding: 12px 14px; font-size: 12px; color: var(--texto2); margin-bottom: 14px; line-height: 1.5;
+  }
+  .owner-note b { color: var(--texto); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>⚽ Lista de Troca</h1>
+  <p id="header-sub">Mundial 2026</p>
+</div>
+
+<div class="content" id="content">
+  <div class="state-msg" id="loading-msg"><div class="ico">⏳</div>A carregar lista…</div>
+</div>
+
+<!-- Firebase SDK (compat) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+<script>
+const firebaseConfig = {
+  apiKey:            "AIzaSyAvX7pWoEaWyrcxFjmZCZ9OfP-WZozIZnY",
+  authDomain:        "mundial2026-a2931.firebaseapp.com",
+  projectId:         "mundial2026-a2931",
+  storageBucket:     "mundial2026-a2931.firebasestorage.app",
+  messagingSenderId: "793915476148",
+  appId:             "1:793915476148:android:9fedd807f33798bf99efe1"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+const params = new URLSearchParams(location.search);
+const tradeId = params.get('id');
+
+const checkedKeys = new Set();
+
+function renderError(msg) {
+  document.getElementById('content').innerHTML = `
+    <div class="state-msg"><div class="ico">😕</div>${msg}</div>
+  `;
+}
+
+function renderList(data) {
+  const content = document.getElementById('content');
+  content.innerHTML = '';
+
+  document.getElementById('header-sub').textContent = data.ownerName
+    ? `Lista de ${data.ownerName}` : 'Lista partilhada';
+
+  const note = document.createElement('div');
+  note.className = 'owner-note';
+  note.innerHTML = `Marca os cromos que <b>queres pedir</b> (da lista "Tem para troca") ou que <b>tens para dar</b> (da lista "Precisa"). No fim, mostra o ecrã a quem partilhou contigo.`;
+  content.appendChild(note);
+
+  if (data.repetidos && data.repetidos.length) {
+    content.appendChild(buildSection('🔁', 'Tem para troca', data.repetidos, true));
+  }
+  if (data.falta && data.falta.length) {
+    content.appendChild(buildSection('📭', 'Precisa destes', data.falta, false));
+  }
+
+  if ((!data.repetidos || !data.repetidos.length) && (!data.falta || !data.falta.length)) {
+    content.innerHTML += `<div class="state-msg"><div class="ico">🤷</div>Esta lista está vazia.</div>`;
+    return;
+  }
+
+  const bar = document.createElement('div');
+  bar.className = 'summary-bar';
+  bar.innerHTML = `
+    <div class="txt"><b id="checked-count">0</b> selecionados</div>
+    <button class="summary-btn" id="copy-btn">Copiar seleção</button>
+  `;
+  content.appendChild(bar);
+
+  document.getElementById('copy-btn').addEventListener('click', () => {
+    const items = [...checkedKeys];
+    if (!items.length) { alert('Marca pelo menos um cromo primeiro.'); return; }
+    const text = 'Quero trocar:\n' + items.join('\n');
+    if (navigator.share) {
+      navigator.share({ text }).catch(()=>{});
+    } else if (navigator.clipboard) {
+      navigator.clipboard.writeText(text).then(() => alert('Copiado! Já podes colar e enviar.'));
+    } else {
+      alert(text);
+    }
+  });
+}
+
+function buildSection(icon, title, items, isRepetidos) {
+  const section = document.createElement('div');
+  section.className = 'section';
+  section.innerHTML = `
+    <div class="section-header">
+      <span class="ico">${icon}</span>
+      <span class="title">${title}</span>
+      <span class="count">${items.length}</span>
+    </div>
+  `;
+  items.forEach(it => {
+    const row = document.createElement('div');
+    row.className = 'item-row';
+    const key = (isRepetidos ? 'rep:' : 'falta:') + it.code;
+    row.innerHTML = `
+      <div class="item-check"></div>
+      <div class="item-code">${it.code}</div>
+      <div class="item-name">${it.name || ''}</div>
+      ${isRepetidos && it.qty >= 2 ? `<div class="item-qty">×${it.qty}</div>` : ''}
+    `;
+    row.addEventListener('click', () => {
+      if (checkedKeys.has(key)) {
+        checkedKeys.delete(key);
+        row.classList.remove('checked');
+        row.querySelector('.item-check').textContent = '';
+      } else {
+        checkedKeys.add(key);
+        row.classList.add('checked');
+        row.querySelector('.item-check').textContent = '✓';
+      }
+      const el = document.getElementById('checked-count');
+      if (el) el.textContent = checkedKeys.size;
+    });
+    section.appendChild(row);
+  });
+  return section;
+}
+
+if (!tradeId) {
+  renderError('Link inválido — falta o código da lista.');
+} else {
+  db.collection('trocas').doc(tradeId).get()
+    .then(snap => {
+      if (!snap.exists) {
+        renderError('Esta lista já não está disponível.<br><span style="font-size:11px">(pode ter expirado ou o link está errado)</span>');
+        return;
+      }
+      renderList(snap.data());
+    })
+    .catch(err => {
+      renderError('Não foi possível carregar a lista.<br><span style="font-size:11px">' + (err.message||'') + '</span>');
+    });
+}
+</script>
+</body>
+</html>
