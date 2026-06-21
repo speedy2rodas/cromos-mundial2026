@@ -30,48 +30,84 @@
   .header h1 { margin: 0; font-size: 17px; font-weight: 800; color: var(--ouro-claro); letter-spacing: 0.5px; }
   .header p { margin: 4px 0 0; font-size: 12px; color: var(--texto2); }
 
-  .content { padding: 14px; max-width: 480px; margin: 0 auto; }
+  .content { padding: 14px; max-width: 720px; margin: 0 auto; padding-bottom: 90px; }
+
+  .team-card { background: var(--bg-card); border: 1px solid var(--borda); border-radius: var(--radius); margin-bottom: 12px; overflow: hidden; }
+  .team-card-header { padding: 10px 14px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--borda); background: var(--bg-card2); }
+  .team-card-header .flag { font-size: 18px; }
+  .team-card-header .name { font-weight: 800; font-size: 13px; flex: 1; }
+  .team-cols { display: flex; }
+  .team-col { flex: 1; min-width: 0; padding: 10px; }
+  .team-col:first-child { border-right: 1px solid var(--borda); }
+  .team-col-label { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: var(--texto2); margin-bottom: 8px; display: flex; align-items: center; gap: 4px; }
+  .chip-grid { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip {
+    background: var(--bg-card2); border: 1px solid var(--borda); border-radius: 8px;
+    padding: 6px 9px; font-size: 13px; font-weight: 700; color: var(--ouro-claro);
+    font-family: monospace; cursor: pointer; display: flex; align-items: center; gap: 4px;
+    transition: all 0.15s; position: relative;
+  }
+  .chip:active { transform: scale(0.93); }
+  .chip.in-cart { background: var(--ouro); color: #1a1206; border-color: var(--ouro); }
+  .chip .qty-badge { background: var(--laranja); color: #fff; font-size: 9px; font-weight: 800; padding: 1px 5px; border-radius: 99px; }
+  .chip-empty { font-size: 11px; color: var(--texto2); padding: 4px 0; }
 
   .state-msg { text-align: center; padding: 60px 20px; color: var(--texto2); font-size: 14px; }
   .state-msg .ico { font-size: 36px; margin-bottom: 12px; }
-
-  .section { background: var(--bg-card); border: 1px solid var(--borda); border-radius: var(--radius); margin-bottom: 14px; overflow: hidden; }
-  .section-header { padding: 12px 14px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--borda); }
-  .section-header .ico { font-size: 16px; }
-  .section-header .title { font-weight: 800; font-size: 13px; flex: 1; }
-  .section-header .count { font-size: 11px; color: var(--texto2); background: var(--bg-card2); padding: 2px 8px; border-radius: 99px; }
-
-  .item-row { display: flex; align-items: center; padding: 10px 14px; border-bottom: 1px solid var(--borda); gap: 10px; cursor: pointer; transition: background 0.15s; }
-  .item-row:last-child { border-bottom: none; }
-  .item-row:active { background: var(--bg-card2); }
-  .item-row.checked { background: rgba(200,150,60,0.1); }
-  .item-check {
-    width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--borda); flex-shrink: 0;
-    display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800;
-    transition: all 0.15s;
-  }
-  .item-row.checked .item-check { background: var(--ouro); border-color: var(--ouro); color: #000; }
-  .item-code { font-weight: 800; color: var(--ouro-claro); font-family: monospace; font-size: 14px; width: 50px; flex-shrink: 0; }
-  .item-name { flex: 1; font-size: 12px; color: var(--texto2); min-width: 0; }
-  .item-qty { background: var(--laranja); color: #fff; font-size: 10px; font-weight: 800; padding: 2px 7px; border-radius: 99px; flex-shrink: 0; }
-
-  .summary-bar {
-    position: sticky; bottom: 0; background: var(--bg-card); border-top: 1px solid var(--borda);
-    padding: 12px 14px calc(12px + var(--safe-bot)); display: flex; align-items: center; justify-content: space-between;
-    gap: 10px; box-shadow: 0 -4px 16px rgba(0,0,0,0.3);
-  }
-  .summary-bar .txt { font-size: 12px; color: var(--texto2); }
-  .summary-bar .txt b { color: var(--ouro-claro); }
-  .summary-btn {
-    background: var(--verde); color: #fff; border: none; border-radius: 10px;
-    padding: 10px 18px; font-size: 13px; font-weight: 700; cursor: pointer;
-  }
 
   .owner-note {
     background: var(--bg-card2); border: 1px solid var(--borda); border-radius: var(--radius);
     padding: 12px 14px; font-size: 12px; color: var(--texto2); margin-bottom: 14px; line-height: 1.5;
   }
   .owner-note b { color: var(--texto); }
+
+  /* Barra de baixo: lista "Cromos" (a tua seleção final) */
+  .cart-bar {
+    position: fixed; left: 0; right: 0; bottom: 0; background: var(--bg-card); border-top: 1px solid var(--borda);
+    padding: 12px 14px calc(12px + var(--safe-bot)); box-shadow: 0 -4px 16px rgba(0,0,0,0.4); z-index: 50;
+  }
+  .cart-bar-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .cart-bar .txt { font-size: 12px; color: var(--texto2); }
+  .cart-bar .txt b { color: var(--ouro-claro); }
+  .cart-btn {
+    background: var(--verde); color: #fff; border: none; border-radius: 10px;
+    padding: 10px 18px; font-size: 13px; font-weight: 700; cursor: pointer;
+  }
+  .cart-btn:disabled { opacity: 0.4; }
+
+  /* Modal de quantidade — igual à app principal */
+  .qty-modal-overlay {
+    display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+    z-index: 200; align-items: center; justify-content: center; padding: 20px;
+  }
+  .qty-modal-overlay.visible { display: flex; }
+  .qty-modal {
+    background: var(--bg-card); border: 1px solid var(--borda); border-radius: 16px;
+    padding: 24px 20px; width: 100%; max-width: 280px; text-align: center;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+  }
+  .qty-modal-name { font-size: 16px; font-weight: 800; color: var(--texto); margin-bottom: 4px; }
+  .qty-modal-code {
+    font-size: 12px; font-weight: 700; color: var(--ouro-claro); font-family: monospace;
+    background: var(--bg-card2); border: 1px solid var(--borda); border-radius: 6px;
+    display: inline-block; padding: 2px 10px; margin-bottom: 18px;
+  }
+  .qty-modal-controls { display: flex; align-items: center; justify-content: center; gap: 18px; margin-bottom: 22px; }
+  .qty-btn {
+    width: 44px; height: 44px; border-radius: 50%; border: 1.5px solid var(--borda);
+    background: var(--bg-card2); color: var(--texto); font-size: 22px; font-weight: 700;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    user-select: none; transition: transform 0.1s;
+  }
+  .qty-btn:active { transform: scale(0.9); }
+  .qty-btn#qty-plus { border-color: var(--laranja); color: var(--laranja); }
+  .qty-value { font-size: 32px; font-weight: 800; color: var(--ouro-claro); min-width: 50px; }
+  .qty-modal-actions { display: flex; gap: 10px; }
+  .qty-cancel, .qty-confirm {
+    flex: 1; padding: 12px; border-radius: 10px; border: none; font-size: 14px; font-weight: 700; cursor: pointer;
+  }
+  .qty-cancel { background: var(--bg-card2); color: var(--texto2); }
+  .qty-confirm { background: var(--verde); color: #fff; }
 </style>
 </head>
 <body>
@@ -83,6 +119,23 @@
 
 <div class="content" id="content">
   <div class="state-msg" id="loading-msg"><div class="ico">⏳</div>A carregar lista…</div>
+</div>
+
+<!-- Modal de quantidade -->
+<div id="qty-modal-overlay" class="qty-modal-overlay">
+  <div class="qty-modal">
+    <div class="qty-modal-name" id="qty-modal-name">—</div>
+    <div class="qty-modal-code" id="qty-modal-code">—</div>
+    <div class="qty-modal-controls">
+      <button class="qty-btn" id="qty-minus">−</button>
+      <div class="qty-value" id="qty-value">0</div>
+      <button class="qty-btn" id="qty-plus">+</button>
+    </div>
+    <div class="qty-modal-actions">
+      <button class="qty-cancel" id="qty-cancel">Cancelar</button>
+      <button class="qty-confirm" id="qty-confirm">Confirmar</button>
+    </div>
+  </div>
 </div>
 
 <!-- Firebase SDK (compat) -->
@@ -104,7 +157,9 @@ const db = firebase.firestore();
 const params = new URLSearchParams(location.search);
 const tradeId = params.get('id');
 
-const checkedKeys = new Set();
+// cart: Map de chave única -> { code, name, team, flag, qty, source: 'rep'|'falta' }
+const cart = new Map();
+let qtyModalState = null; // { key, code, name, team, flag, source, maxQty, value }
 
 function renderError(msg) {
   document.getElementById('content').innerHTML = `
@@ -118,35 +173,153 @@ function renderList(data) {
 
   document.getElementById('header-sub').textContent = 'Lista partilhada';
 
-  const note = document.createElement('div');
-  note.className = 'owner-note';
-  note.innerHTML = `🔁 <b>Tem para troca</b> — cromos repetidos disponíveis.<br>📭 <b>Precisa destes</b> — cromos que ainda faltam.<br><br>Marca os que te interessam e mostra o ecrã.`;
-  content.appendChild(note);
+  const repetidos = data.repetidos || [];
+  const falta = data.falta || [];
 
-  if (data.repetidos && data.repetidos.length) {
-    content.appendChild(buildSection('🔁', 'Tem para troca', data.repetidos, true));
-  }
-  if (data.falta && data.falta.length) {
-    content.appendChild(buildSection('📭', 'Precisa destes', data.falta, false));
-  }
-
-  if ((!data.repetidos || !data.repetidos.length) && (!data.falta || !data.falta.length)) {
-    content.innerHTML += `<div class="state-msg"><div class="ico">🤷</div>Esta lista está vazia.</div>`;
+  if (!repetidos.length && !falta.length) {
+    content.innerHTML = `<div class="state-msg"><div class="ico">🤷</div>Esta lista está vazia.</div>`;
     return;
   }
 
-  const bar = document.createElement('div');
-  bar.className = 'summary-bar';
-  bar.innerHTML = `
-    <div class="txt"><b id="checked-count">0</b> selecionados</div>
-    <button class="summary-btn" id="copy-btn">Copiar seleção</button>
-  `;
-  content.appendChild(bar);
+  const note = document.createElement('div');
+  note.className = 'owner-note';
+  note.innerHTML = `Toca num cromo para escolher quantos queres. <b>Tem para troca</b> (esquerda) são repetidos disponíveis; <b>Precisa destes</b> (direita) são os que faltam. A tua seleção final junta-se em "Cromos" no fundo.`;
+  content.appendChild(note);
 
-  document.getElementById('copy-btn').addEventListener('click', () => {
-    const items = [...checkedKeys];
-    if (!items.length) { alert('Marca pelo menos um cromo primeiro.'); return; }
-    const text = 'Quero trocar:\n' + items.join('\n');
+  // Junta todas as seleções que aparecem em qualquer das duas listas
+  const teamsMap = {};
+  const teamOrder = [];
+  function ensureTeam(it) {
+    const key = (it.flag||'') + '||' + (it.team||'Outros');
+    if (!teamsMap[key]) { teamsMap[key] = { flag: it.flag, team: it.team||'Outros', reps: [], falta: [] }; teamOrder.push(key); }
+    return teamsMap[key];
+  }
+  repetidos.forEach(it => ensureTeam(it).reps.push(it));
+  falta.forEach(it => ensureTeam(it).falta.push(it));
+
+  teamOrder.forEach(key => {
+    const t = teamsMap[key];
+    content.appendChild(buildTeamCard(t));
+  });
+
+  buildCartBar();
+}
+
+function buildTeamCard(t) {
+  const card = document.createElement('div');
+  card.className = 'team-card';
+  card.innerHTML = `
+    <div class="team-card-header">
+      <span class="flag">${t.flag||''}</span>
+      <span class="name">${t.team}</span>
+    </div>
+    <div class="team-cols">
+      <div class="team-col">
+        <div class="team-col-label">🔁 Tem para troca</div>
+        <div class="chip-grid" data-side="rep"></div>
+      </div>
+      <div class="team-col">
+        <div class="team-col-label">📭 Precisa destes</div>
+        <div class="chip-grid" data-side="falta"></div>
+      </div>
+    </div>
+  `;
+  const repGrid = card.querySelector('[data-side="rep"]');
+  const faltaGrid = card.querySelector('[data-side="falta"]');
+
+  if (!t.reps.length) repGrid.innerHTML = '<div class="chip-empty">—</div>';
+  else t.reps.forEach(it => repGrid.appendChild(buildChip(it, 'rep', t)));
+
+  if (!t.falta.length) faltaGrid.innerHTML = '<div class="chip-empty">—</div>';
+  else t.falta.forEach(it => faltaGrid.appendChild(buildChip(it, 'falta', t)));
+
+  return card;
+}
+
+function buildChip(it, source, t) {
+  const key = source + ':' + it.code;
+  const chip = document.createElement('div');
+  chip.className = 'chip';
+  chip.dataset.key = key;
+  renderChipContent(chip, it, source);
+  chip.addEventListener('click', () => openQtyModal(key, it, source, t));
+  return chip;
+}
+
+function renderChipContent(chip, it, source) {
+  const inCart = cart.get(chip.dataset.key);
+  chip.classList.toggle('in-cart', !!inCart);
+  if (inCart) {
+    chip.innerHTML = `${it.code}<span class="qty-badge">✓ ${inCart.qty}</span>`;
+    return;
+  }
+  const showQty = source === 'rep' && (it.qty || 1) >= 2;
+  chip.innerHTML = `${it.code}${showQty ? `<span class="qty-badge">×${it.qty}</span>` : ''}`;
+}
+
+function openQtyModal(key, it, source, t) {
+  const existing = cart.get(key);
+  const maxQty = source === 'rep' ? (it.qty || 1) : 99;
+  qtyModalState = { key, code: it.code, name: it.name, team: t.team, flag: t.flag, source, maxQty, value: existing ? existing.qty : 0 };
+  document.getElementById('qty-modal-name').textContent = it.name || t.team;
+  document.getElementById('qty-modal-code').textContent = it.code;
+  document.getElementById('qty-value').textContent = qtyModalState.value;
+  document.getElementById('qty-modal-overlay').classList.add('visible');
+}
+
+function closeQtyModal() {
+  document.getElementById('qty-modal-overlay').classList.remove('visible');
+  qtyModalState = null;
+}
+
+document.getElementById('qty-minus').addEventListener('click', () => {
+  if (!qtyModalState) return;
+  qtyModalState.value = Math.max(0, qtyModalState.value - 1);
+  document.getElementById('qty-value').textContent = qtyModalState.value;
+});
+document.getElementById('qty-plus').addEventListener('click', () => {
+  if (!qtyModalState) return;
+  qtyModalState.value = Math.min(qtyModalState.maxQty, qtyModalState.value + 1);
+  document.getElementById('qty-value').textContent = qtyModalState.value;
+});
+document.getElementById('qty-cancel').addEventListener('click', closeQtyModal);
+document.getElementById('qty-modal-overlay').addEventListener('click', e => {
+  if (e.target.id === 'qty-modal-overlay') closeQtyModal();
+});
+document.getElementById('qty-confirm').addEventListener('click', () => {
+  if (!qtyModalState) return;
+  const { key, code, name, team, flag, source, value } = qtyModalState;
+  if (value > 0) {
+    cart.set(key, { code, name, team, flag, qty: value, source });
+  } else {
+    cart.delete(key);
+  }
+  document.querySelectorAll(`.chip[data-key="${CSS.escape(key)}"]`).forEach(chip => {
+    const it = { code, name, qty: qtyModalState.maxQty };
+    renderChipContent(chip, it, source);
+  });
+  updateCartBar();
+  closeQtyModal();
+});
+
+function buildCartBar() {
+  const bar = document.createElement('div');
+  bar.className = 'cart-bar';
+  bar.id = 'cart-bar';
+  bar.innerHTML = `
+    <div class="cart-bar-top">
+      <div class="txt"><b id="cart-count">0</b> cromos selecionados</div>
+      <button class="cart-btn" id="cart-share-btn" disabled>Copiar lista</button>
+    </div>
+  `;
+  document.body.appendChild(bar);
+  document.getElementById('cart-share-btn').addEventListener('click', () => {
+    if (!cart.size) return;
+    const reps = [...cart.values()].filter(c => c.source === 'rep');
+    const faltas = [...cart.values()].filter(c => c.source === 'falta');
+    let text = 'A minha seleção de troca:\n';
+    if (reps.length) text += '\nVou levar (dos teus repetidos):\n' + reps.map(c => `${c.code} x${c.qty}`).join('\n');
+    if (faltas.length) text += '\n\nPreciso destes (que tu tens):\n' + faltas.map(c => c.code).join('\n');
     if (navigator.share) {
       navigator.share({ text }).catch(()=>{});
     } else if (navigator.clipboard) {
@@ -157,42 +330,12 @@ function renderList(data) {
   });
 }
 
-function buildSection(icon, title, items, isRepetidos) {
-  const section = document.createElement('div');
-  section.className = 'section';
-  section.innerHTML = `
-    <div class="section-header">
-      <span class="ico">${icon}</span>
-      <span class="title">${title}</span>
-      <span class="count">${items.length}</span>
-    </div>
-  `;
-  items.forEach(it => {
-    const row = document.createElement('div');
-    row.className = 'item-row';
-    const key = (isRepetidos ? 'rep:' : 'falta:') + it.code;
-    row.innerHTML = `
-      <div class="item-check"></div>
-      <div class="item-code">${it.code}</div>
-      <div class="item-name">${it.name || ''}</div>
-      ${isRepetidos && it.qty >= 2 ? `<div class="item-qty">×${it.qty}</div>` : ''}
-    `;
-    row.addEventListener('click', () => {
-      if (checkedKeys.has(key)) {
-        checkedKeys.delete(key);
-        row.classList.remove('checked');
-        row.querySelector('.item-check').textContent = '';
-      } else {
-        checkedKeys.add(key);
-        row.classList.add('checked');
-        row.querySelector('.item-check').textContent = '✓';
-      }
-      const el = document.getElementById('checked-count');
-      if (el) el.textContent = checkedKeys.size;
-    });
-    section.appendChild(row);
-  });
-  return section;
+function updateCartBar() {
+  const countEl = document.getElementById('cart-count');
+  const btn = document.getElementById('cart-share-btn');
+  const total = [...cart.values()].reduce((a,c) => a + c.qty, 0);
+  if (countEl) countEl.textContent = total;
+  if (btn) btn.disabled = cart.size === 0;
 }
 
 if (!tradeId) {
