@@ -121,7 +121,7 @@ function renderList(data) {
 
   const note = document.createElement('div');
   note.className = 'owner-note';
-  note.innerHTML = `Marca os cromos que <b>queres pedir</b> (da lista "Tem para troca") ou que <b>tens para dar</b> (da lista "Precisa"). No fim, mostra o ecrã a quem partilhou contigo.`;
+  note.innerHTML = `🔁 <b>Tem para troca</b> — cromos que ${data.ownerName||'esta pessoa'} pode dar.<br>📭 <b>Precisa destes</b> — cromos que ${data.ownerName||'esta pessoa'} ainda não tem.<br><br>Marca os que te interessam e mostra o ecrã.`;
   content.appendChild(note);
 
   if (data.repetidos && data.repetidos.length) {
